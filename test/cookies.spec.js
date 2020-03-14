@@ -495,5 +495,25 @@ module.exports.describe = function({testRunner, expect, browserType, defaultBrow
       expect((await anotherContext.cookies()).length).toBe(0);
       await anotherContext.close();
     });
+    it('should clear individual cookie', async({context, page, server}) => {
+      await page.goto(server.EMPTY_PAGE);
+      await context.addCookies([
+        {
+          url: server.EMPTY_PAGE,
+          name: 'cookie1',
+          value: '1'
+        },
+        {
+          url: server.EMPTY_PAGE,
+          name: 'cookie2',
+          value: '2'
+        }
+      ]);
+      expect(await page.evaluate('document.cookie')).toBe('cookie1=1');
+      await context.clearCookie("cookie1");
+      expect(await context.cookies()).toEqual([]);
+      await page.reload();
+      expect(await page.evaluate('document.cookie')).toBe('');
+    });
   });
 };

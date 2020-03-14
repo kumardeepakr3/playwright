@@ -229,6 +229,13 @@ export class FFBrowserContext extends BrowserContextBase {
     await this._browser._connection.send('Browser.clearCookies', { browserContextId: this._browserContextId || undefined });
   }
 
+  async clearCookie(name: string) {
+    const cookies = await this.cookies();
+    const newCookies = cookies.filter(x => x.name !== name);
+    await this.clearCookies();
+    await this.addCookies(newCookies);
+  }
+
   async _doGrantPermissions(origin: string, permissions: string[]) {
     const webPermissionToProtocol = new Map<string, 'geo' | 'desktop-notification' | 'persistent-storage' | 'push'>([
       ['geolocation', 'geo'],

@@ -315,6 +315,13 @@ export class CRBrowserContext extends BrowserContextBase {
     await this._browser._session.send('Storage.clearCookies', { browserContextId: this._browserContextId || undefined });
   }
 
+  async clearCookie(name: string) {
+    const cookies = await this.cookies();
+    const newCookies = cookies.filter(x => x.name !== name);
+    await this.clearCookies();
+    await this.addCookies(newCookies);
+  }
+
   async _doGrantPermissions(origin: string, permissions: string[]) {
     const webPermissionToProtocol = new Map<string, Protocol.Browser.PermissionType>([
       ['geolocation', 'geolocation'],
@@ -340,7 +347,7 @@ export class CRBrowserContext extends BrowserContextBase {
         throw new Error('Unknown permission: ' + permission);
       return protocolPermission;
     });
-    await this._browser._session.send('Browser.grantPermissions', { origin: origin === '*' ? undefined : origin, browserContextId: this._browserContextId || undefined, permissions: filtered });
+    await this._browser._session.send('Browser.grantPermissions', { origin, browserContextId: this._browserContextId || undefined, permissions: filtered });
   }
 
   async _doClearPermissions() {
