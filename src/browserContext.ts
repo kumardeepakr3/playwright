@@ -41,6 +41,7 @@ export type BrowserContextOptions = {
   hasTouch?: boolean
 };
 
+// Browser context interface
 export interface BrowserContext {
   setDefaultNavigationTimeout(timeout: number): void;
   setDefaultTimeout(timeout: number): void;
