@@ -261,11 +261,13 @@ export class WKBrowserContext extends BrowserContextBase {
     await this._browser._browserSession.send('Playwright.deleteAllCookies', { browserContextId: this._browserContextId });
   }
 
-  async clearCookie(name: string) {
-    const cookies = await this.cookies();
-    const newCookies = cookies.filter(x => x.name !== name);
-    await this.clearCookies();
-    await this.addCookies(newCookies);
+  async clearCookie(cookieToDelete: network.DeleteNetworkCookieParam) {
+    const allCookies = await this.cookies();
+    const cookieToUpdate = network.filterCookiesForDeletion(allCookies, cookieToDelete);
+    for (const cookie of cookieToUpdate) {
+      cookie.expires = 0; 
+    }
+    await this.addCookies(cookieToUpdate);
   }
 
   async _doGrantPermissions(origin: string, permissions: string[]) {

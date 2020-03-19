@@ -50,7 +50,7 @@ export interface BrowserContext {
   cookies(urls?: string | string[]): Promise<network.NetworkCookie[]>;
   addCookies(cookies: network.SetNetworkCookieParam[]): Promise<void>;
   clearCookies(): Promise<void>;
-  clearCookie(name: string): Promise<void>;
+  clearCookie(cookies: network.DeleteNetworkCookieParam): Promise<void>;
   grantPermissions(permissions: string[], options?: { origin?: string }): Promise<void>;
   clearPermissions(): Promise<void>;
   setGeolocation(geolocation: types.Geolocation | null): Promise<void>;
@@ -98,7 +98,7 @@ export abstract class BrowserContextBase extends platform.EventEmitter implement
   abstract cookies(...urls: string[]): Promise<network.NetworkCookie[]>;
   abstract addCookies(cookies: network.SetNetworkCookieParam[]): Promise<void>;
   abstract clearCookies(): Promise<void>;
-  abstract clearCookie(name: string): Promise<void>;
+  abstract clearCookie(cookies: network.DeleteNetworkCookieParam): Promise<void>;
   abstract _doGrantPermissions(origin: string, permissions: string[]): Promise<void>;
   abstract _doClearPermissions(): Promise<void>;
   abstract setGeolocation(geolocation: types.Geolocation | null): Promise<void>;

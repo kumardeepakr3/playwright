@@ -41,6 +41,13 @@ export type SetNetworkCookieParam = {
   sameSite?: 'Strict' | 'Lax' | 'None'
 };
 
+export type DeleteNetworkCookieParam = {
+  name: string,
+  domain?: string,
+  path?: string,
+  secure?: boolean,
+};
+
 export function filterCookies(cookies: NetworkCookie[], urls: string | string[] = []): NetworkCookie[] {
   if (!Array.isArray(urls))
     urls = [ urls ];
@@ -59,6 +66,21 @@ export function filterCookies(cookies: NetworkCookie[], urls: string | string[] 
       return true;
     }
     return false;
+  });
+}
+
+export function filterCookiesForDeletion(cookies: NetworkCookie[], cookieToDelete: DeleteNetworkCookieParam): NetworkCookie[] {
+  return cookies.filter( c => {
+    if (cookieToDelete.name !== c.name)
+      return false;
+    if (cookieToDelete.domain && cookieToDelete.domain !== c.domain)
+      return false;
+    if (cookieToDelete.path && cookieToDelete.path !== c.path)
+      return false;
+    if (cookieToDelete.secure !== undefined && cookieToDelete.secure !== c.secure)
+      return false;
+
+    return true;
   });
 }
 
