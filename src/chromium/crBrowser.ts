@@ -349,7 +349,7 @@ export class CRBrowserContext extends BrowserContextBase {
         throw new Error('Unknown permission: ' + permission);
       return protocolPermission;
     });
-    await this._browser._session.send('Browser.grantPermissions', { origin, browserContextId: this._browserContextId || undefined, permissions: filtered });
+    await this._browser._session.send('Browser.grantPermissions', { origin: origin === '*' ? undefined : origin, browserContextId: this._browserContextId || undefined, permissions: filtered });
   }
 
   async _doClearPermissions() {
