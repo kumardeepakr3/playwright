@@ -70,7 +70,7 @@ export function filterCookies(cookies: NetworkCookie[], urls: string | string[] 
 }
 
 export function filterCookiesForDeletion(cookies: NetworkCookie[], cookieToDelete: DeleteNetworkCookieParam): NetworkCookie[] {
-  return cookies.filter( c => {
+  return cookies.filter(c => {
     if (cookieToDelete.name !== c.name)
       return false;
     if (cookieToDelete.domain && cookieToDelete.domain !== c.domain)

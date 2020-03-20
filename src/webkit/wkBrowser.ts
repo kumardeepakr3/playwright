@@ -265,9 +265,8 @@ export class WKBrowserContext extends BrowserContextBase {
   async clearCookie(cookieToDelete: network.DeleteNetworkCookieParam) {
     const allCookies = await this.cookies();
     const cookieToUpdate = network.filterCookiesForDeletion(allCookies, cookieToDelete);
-    for (const cookie of cookieToUpdate) {
-      cookie.expires = 0; 
-    }
+    for (const cookie of cookieToUpdate)
+      cookie.expires = 0;
     await this.addCookies(cookieToUpdate);
   }
 
