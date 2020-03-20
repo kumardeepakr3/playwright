@@ -83,41 +83,11 @@ module.exports.describe = function({testRunner, expect, defaultBrowserOptions, b
       const backgroundPages = context.backgroundPages();
       let backgroundPage = backgroundPages.length
           ? backgroundPages[0]
-          : await context.waitForEvent('backgroundpage').then(event => event.page());
+          : await context.waitForEvent('backgroundpage');
       expect(backgroundPage).toBeTruthy();
       expect(context.backgroundPages()).toContain(backgroundPage);
       expect(context.pages()).not.toContain(backgroundPage);
       await removeUserDataDir(userDataDir);
-    });
-  });
-
-  describe('BrowserFetcher', function() {
-    it('should download and extract linux binary', async({server}) => {
-      const downloadsFolder = await mkdtempAsync(TMP_FOLDER);
-      const browserFetcher = browserType._createBrowserFetcher({
-        platform: 'linux',
-        path: downloadsFolder,
-        host: server.PREFIX
-      });
-      let revisionInfo = browserFetcher.revisionInfo('123456');
-      server.setRoute(revisionInfo.url.substring(server.PREFIX.length), (req, res) => {
-        server.serveFile(req, res, '/chromium-linux.zip');
-      });
-
-      expect(revisionInfo.local).toBe(false);
-      expect(browserFetcher._platform).toBe('linux');
-      expect(await browserFetcher.canDownload('100000')).toBe(false);
-      expect(await browserFetcher.canDownload('123456')).toBe(true);
-
-      revisionInfo = await browserFetcher.download('123456');
-      expect(revisionInfo.local).toBe(true);
-      expect(await readFileAsync(revisionInfo.executablePath, 'utf8')).toBe('LINUX BINARY\n');
-      const expectedPermissions = WIN ? 0666 : 0755;
-      expect((await statAsync(revisionInfo.executablePath)).mode & 0777).toBe(expectedPermissions);
-      expect(await browserFetcher.localRevisions()).toEqual(['123456']);
-      await browserFetcher.remove('123456');
-      expect(await browserFetcher.localRevisions()).toEqual([]);
-      await rmAsync(downloadsFolder);
     });
   });
 

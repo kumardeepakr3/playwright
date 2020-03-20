@@ -13,18 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const path = require('path');
-const {Playwright} = require('playwright-core/lib/server/playwright.js');
 
-const playwright = new Playwright({
-  browsers: ['firefox'],
-});
-module.exports = playwright;
+import * as types from 'playwright-core/types/types';
 
-try {
-  const downloadedBrowsers = require(path.join(__dirname, '.downloaded-browsers.json'));
-  playwright.firefox._executablePath = downloadedBrowsers.ffExecutablePath;
-} catch (e) {
-  throw new Error('playwright-firefox has not downloaded Firefox.');
-}
-
+export * from 'playwright-core/types/types';
+export const chromium: types.BrowserType<types.ChromiumBrowser>;
